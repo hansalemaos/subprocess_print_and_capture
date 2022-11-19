@@ -1,14 +1,36 @@
 import subprocess
-import keyboard
+import keyboard as keyboard__
+import psutil
 
 
 def execute_subprocess(
     cmd: str, exit_keys: str = "ctrl+e", end_of_printline: str = ""
 ) -> list:
+    popen = None
+
     def run_subprocess(cmd):
+        nonlocal popen
+
         def kill_process():
-            popen.terminate()
-            keyboard.remove_hotkey(kill_process)
+            nonlocal popen
+            try:
+                print("Killing the process")
+                p = psutil.Process(popen.pid)
+                p.kill()
+                # popen.kill()
+                try:
+                    if exit_keys in keyboard__.__dict__["_hotkeys"]:
+                        keyboard__.remove_hotkey(exit_keys)
+                except Exception:
+                    try:
+                        keyboard__.unhook_all_hotkeys()
+                    except Exception:
+                        pass
+            except Exception:
+                try:
+                    keyboard__.unhook_all_hotkeys()
+                except Exception:
+                    pass
 
         try:
             popen = subprocess.Popen(
@@ -18,7 +40,11 @@ def execute_subprocess(
             for stdout_line in iter(popen.stdout.readline, ""):
                 counter += 1
                 if counter == 0:
-                    keyboard.add_hotkey(exit_keys, kill_process)
+                    try:
+                        if exit_keys not in keyboard__.__dict__["_hotkeys"]:
+                            keyboard__.add_hotkey(exit_keys, kill_process)
+                    except Exception:
+                        pass
 
                 try:
                     yield stdout_line
@@ -35,7 +61,31 @@ def execute_subprocess(
                 yield ""
 
     proxyresults = []
-    for proxyresult in run_subprocess(cmd):
-        proxyresults.append(proxyresult)
-        print(proxyresult, end=end_of_printline)
+    try:
+        for proxyresult in run_subprocess(cmd):
+            proxyresults.append(proxyresult)
+            print(proxyresult, end=end_of_printline)
+    except BaseException:
+        try:
+            p = psutil.Process(popen.pid)
+            p.kill()
+            popen = None
+        except Exception as da:
+            print(da)
+
+    try:
+        if popen is not None:
+            p = psutil.Process(popen.pid)
+            p.kill()
+    except Exception as da:
+        pass
+
+    try:
+        if exit_keys in keyboard__.__dict__["_hotkeys"]:
+            keyboard__.remove_hotkey(exit_keys)
+    except Exception:
+        try:
+            keyboard__.unhook_all_hotkeys()
+        except Exception:
+            pass
     return proxyresults
