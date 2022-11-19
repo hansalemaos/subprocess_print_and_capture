@@ -5,7 +5,123 @@
 
 $pip install subprocess-print-and-capture
 
-from subprocess_print_and_capture import execute_subprocess
+from subprocess_print_and_capture import execute_subprocess, execute_subprocess_multiple_commands
+
+# Update: you can now pass multiple "subcommands", you will see the output on screen, get the printed text as a list, and can kill the process with a hotkey (and still getting the output)  
+adboutput = execute_subprocess_multiple_commands(
+    "adb shell", ["ls", "sleep 1", "ls -R -s -i -n -H"], exit_keys="ctrl+x"
+)
+
+# output screen
+acct
+boot
+bugreports
+cache
+charger
+config
+d
+data
+default.prop
+dev
+etc
+file_contexts.bin
+fstab.nougat
+fstab_sdcard.nougat
+init
+init.environ.rc
+init.nougat.rc
+init.rc
+init.usb.configfs.rc
+init.usb.rc
+init.zygote32.rc
+lib
+mnt
+oem
+proc
+property_contexts
+root
+sbin
+sdcard
+seapp_contexts
+selinux_version
+sepolicy
+service_contexts
+storage
+sys
+system
+ueventd.nougat.rc
+ueventd.rc
+vendor
+
+
+adboutput
+Out[3]: 
+['acct\n',
+ 'boot\n',
+ 'bugreports\n',
+ 'cache\n',
+ 'charger\n',
+ 'config\n',
+ 'd\n',
+ 'data\n',
+ 'default.prop\n',
+ 'dev\n',
+ 'etc\n',
+ 'file_contexts.bin\n',
+ 'fstab.nougat\n',
+ 'fstab_sdcard.nougat\n',
+ 'init\n',
+ 'init.environ.rc\n',
+ 'init.nougat.rc\n',
+ 'init.rc\n',
+ 'init.usb.configfs.rc\n',
+ 'init.usb.rc\n',
+ 'init.zygote32.rc\n',
+ 'lib\n',
+ 'mnt\n',
+ 'oem\n',
+ 'proc\n',
+ 'property_contexts\n',
+ 'root\n',
+ 'sbin\n',
+ 'sdcard\n',
+ 'seapp_contexts\n',
+ 'selinux_version\n',
+ 'sepolicy\n',
+ 'service_contexts\n',
+ 'storage\n',
+ 'sys\n',
+ 'system\n',
+ 'ueventd.nougat.rc\n',
+ 'ueventd.rc\n',
+ 'vendor\n',
+ '.:\n',
+ 'total 1680\n',
+ '     1    0 dr-xr-xr-x  68 0    0          0 2022-11-19 15:28 acct\n',
+ '  3524    0 drwxrwxr-x   6 1000 1000     240 2022-11-19 15:28 boot\n',
+ '  4108    0 lrwxrwxrwx   1 0    0         50 2022-11-19 15:28 bugreports -> /data/user_de/0/com.android.shell/files/bugreports\n',
+ '  6103    0 drwxrwx---   6 1000 2001     120 2022-11-19 15:28 cache\n',
+ '  4110    0 lrwxrwxrwx   1 0    0         13 2022-11-19 15:28 charger -> /sbin/healthd\n',
+ '  4111    0 dr-x------   2 0    0         40 2022-11-19 15:28 config\n',
+ '  4112    0 lrwxrwxrwx   1 0    0         17 2022-11-19 15:28 d -> /sys/kernel/debug\n',
+ '     2    8 drwxrwx--x  38 1000 1000    4096 2022-11-19 15:28 data\n',
+ '  4114    4 -rw-r--r--   1 0    0        958 2022-11-19 15:28 default.prop\n',
+ '  4387    0 drwxr-xr-x  13 0    0       3840 2022-11-19 15:28 dev\n',
+ '  4115    0 lrwxrwxrwx   1 0    0         11 2022-11-19 15:28 etc -> /system/etc\n',
+ '  4116   76 -rw-r--r--   1 0    0      77090 2022-11-19 15:28 file_contexts.bin\n',
+ '  4117    4 -rw-r-----   1 0    0        564 2022-11-19 15:28 fstab.nougat\n',
+ '  4118    4 -rw-r-----   1 0    0        354 2022-11-19 15:28 fstab_sdcard.nougat\n',
+ '  4119 1304 -rwxr-x---   1 0    0    1334780 2022-11-19 15:28 init\n',
+ '  4120    4 -rwxr-x---   1 0    0        887 2022-11-19 15:28 init.environ.rc\n',
+ '  4121    4 -rwxr-x---   1 0    0       3690 2022-11-19 15:28 init.nougat.rc\n',
+ '  4122   28 -rwxr-x---   1 0    0      27803 2022-11-19 15:28 init.rc\n',
+ '  4123   12 -rwxr-x---   1 0    0       9283 2022-11-19 15:28 init.usb.configfs.rc\n',
+ '  4124    8 -rwxr-x---   1 0    0       5694 2022-11-19 15:28 init.usb.rc\n',
+ '  4125    4 -rwxr-x---   1 0    0        411 2022-11-19 15:28 init.zygote32.rc\n',
+ '  4443    0 lrwxrwxrwx   1 0    0         10 2022-11-19 15:28 lib -> system/lib\n',
+ '  4457    0 drwxr-xr-x  11 0    1000     240 2022-11-19 15:28 mnt\n',
+ '  4127    0 drwxr-xr-x   2 0    0         40 2022-11-19 15:28 oem\n',
+
 cmd = r"""adb shell getevent -l"""
 results = execute_subprocess(cmd, exit_keys="ctrl+e", end_of_printline="")
 
