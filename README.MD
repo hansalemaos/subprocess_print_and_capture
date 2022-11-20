@@ -5,12 +5,16 @@
 
 $pip install subprocess-print-and-capture
 
-from subprocess_print_and_capture import execute_subprocess, execute_subprocess_multiple_commands
+from subprocess_print_and_capture import execute_subprocess, execute_subprocess_multiple_commands, execute_subprocess_multiple_commands_v2
 
 # Update: you can now pass multiple "subcommands", you will see the output on screen, get the printed text as a list, and can kill the process with a hotkey (and still getting the output)  
 adboutput = execute_subprocess_multiple_commands(
     "adb shell", ["ls", "sleep 1", "ls -R -s -i -n -H"], exit_keys="ctrl+x"
 )
+adboutput = execute_subprocess_multiple_commands_v2(
+    "adb shell", ["ls", "sleep 1", "ls -R -s -i -n -H"], exit_keys="ctrl+x"
+) #alternative, works sometimes better
+
 
 # output screen
 acct
