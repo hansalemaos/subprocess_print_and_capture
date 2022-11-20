@@ -234,7 +234,7 @@ def execute_subprocess_multiple_commands_v2(
                 if isinstance(subcommand, bytes):
                     subcommand = subcommand.rstrip(b"\n") + b"\n"
 
-                    subcommand = subcommand.deencode("utf-8", "replace")
+                    subcommand = subcommand.decode("utf-8", "replace")
                 else:
                     subcommand = subcommand.rstrip("\n") + "\n"
 
