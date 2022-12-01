@@ -7,6 +7,22 @@ $pip install subprocess-print-and-capture
 
 from subprocess_print_and_capture import execute_subprocess, execute_subprocess_multiple_commands, execute_subprocess_multiple_commands_v2
 
+# -----------------------------------------------------------------------------------------------------------------------------
+# Update 2022-12-01: added timeout / new functions
+cmd = r"ls -R -s -i -n -H"
+results = execute_subprocess(cmd, exit_keys="ctrl+e", end_of_printline="",timeout=2) # Useful if the process is frozen, will return the captured stdout
+
+from subprocess_print_and_capture import execute_subprocess, execute_subprocess_multiple_commands, execute_subprocess_multiple_commands_v2,execute_subprocess_multiple_commands_with_timeout_bin ,execute_subprocess_multiple_commands_with_timeout_str  
+
+adb_path = "C:\\Users\\Gamer\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.exe"
+deviceserial = "localhost:5745"
+cmd = rf"{adb_path} -s {deviceserial} shell"
+subcommands=["ls", "sleep 1", "ls -R -s -i -n -H"]
+results1 = execute_subprocess_multiple_commands_with_timeout_bin(cmd=cmd, subcommands=subcommands, exit_keys="ctrl+e", end_of_printline="",print_output=True,timeout=2) # returns a list containing bin (to avoid encoding problems)
+results2 = execute_subprocess_multiple_commands_with_timeout_str(cmd=cmd, subcommands=subcommands, exit_keys="ctrl+e", end_of_printline="",print_output=True,timeout=2) # returns a list containing str
+
+# -----------------------------------------------------------------------------------------------------------------------------
+
 # Update: you can now pass multiple "subcommands", you will see the output on screen, get the printed text as a list, and can kill the process with a hotkey (and still getting the output)  
 adboutput = execute_subprocess_multiple_commands(
     "adb shell", ["ls", "sleep 1", "ls -R -s -i -n -H"], exit_keys="ctrl+x"
@@ -125,6 +141,9 @@ Out[3]:
  '  4443    0 lrwxrwxrwx   1 0    0         10 2022-11-19 15:28 lib -> system/lib\n',
  '  4457    0 drwxr-xr-x  11 0    1000     240 2022-11-19 15:28 mnt\n',
  '  4127    0 drwxr-xr-x   2 0    0         40 2022-11-19 15:28 oem\n',
+
+
+# -----------------------------------------------------------------------------------------------------------------------------
 
 cmd = r"""adb shell getevent -l"""
 results = execute_subprocess(cmd, exit_keys="ctrl+e", end_of_printline="")
