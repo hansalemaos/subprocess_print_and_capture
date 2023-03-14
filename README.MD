@@ -7,19 +7,7 @@ $pip install subprocess-print-and-capture
 
 from subprocess_print_and_capture import execute_subprocess, execute_subprocess_multiple_commands, execute_subprocess_multiple_commands_v2
 
-# -----------------------------------------------------------------------------------------------------------------------------
-# Update 2022-12-01: added timeout / new functions
-cmd = r"ls -R -s -i -n -H"
-results = execute_subprocess(cmd, exit_keys="ctrl+e", end_of_printline="",timeout=2) # Useful if the process is frozen, will return the captured stdout
 
-from subprocess_print_and_capture import execute_subprocess, execute_subprocess_multiple_commands, execute_subprocess_multiple_commands_v2,execute_subprocess_multiple_commands_with_timeout_bin ,execute_subprocess_multiple_commands_with_timeout_str  
-
-adb_path = "C:\\Users\\Gamer\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.exe"
-deviceserial = "localhost:5745"
-cmd = rf"{adb_path} -s {deviceserial} shell"
-subcommands=["ls", "sleep 1", "ls -R -s -i -n -H"]
-results1 = execute_subprocess_multiple_commands_with_timeout_bin(cmd=cmd, subcommands=subcommands, exit_keys="ctrl+e", end_of_printline="",print_output=True,timeout=2) # returns a list containing bin (to avoid encoding problems)
-results2 = execute_subprocess_multiple_commands_with_timeout_str(cmd=cmd, subcommands=subcommands, exit_keys="ctrl+e", end_of_printline="",print_output=True,timeout=2) # returns a list containing str
 
 # -----------------------------------------------------------------------------------------------------------------------------
 
@@ -209,4 +197,197 @@ Out[3]:
  '/dev/input/event3: EV_ABS       ABS_MT_PRESSURE      0000002c            \n',
  ....
  
+ 
+ # -----------------------------------------------------------------------------------------------------------------------------
+# Update 2022-12-01: added timeout / new functions
+cmd = r"ls -R -s -i -n -H"
+results = execute_subprocess(cmd, exit_keys="ctrl+e", end_of_printline="",timeout=2) # Useful if the process is frozen, will return the captured stdout
+
+from subprocess_print_and_capture import execute_subprocess, execute_subprocess_multiple_commands, execute_subprocess_multiple_commands_v2,execute_subprocess_multiple_commands_with_timeout_bin ,execute_subprocess_multiple_commands_with_timeout_str  
+
+adb_path = "C:\\Users\\Gamer\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.exe"
+deviceserial = "localhost:5745"
+cmd = rf"{adb_path} -s {deviceserial} shell"
+subcommands=["ls", "sleep 1", "ls -R -s -i -n -H"]
+results1 = execute_subprocess_multiple_commands_with_timeout_bin(cmd=cmd, subcommands=subcommands, exit_keys="ctrl+e", end_of_printline="",print_output=True,timeout=2) # returns a list containing bin (to avoid encoding problems)
+results2 = execute_subprocess_multiple_commands_with_timeout_str(cmd=cmd, subcommands=subcommands, exit_keys="ctrl+e", end_of_printline="",print_output=True,timeout=2) # returns a list containing str
+ 
+  # -----------------------------------------------------------------------------------------------------------------------------
+
+ 
+# Update 2023-03-14:  Added some new stuff:
+execute_subprocess_multiple_commands_with_timeout_bin2
+    Executes a subprocess and runs one or more commands in it, with the option to add a timeout and exit keys.
+
+    :param cmd: The command to be executed in the subprocess.
+    :type cmd: str
+
+    :param subcommands: Additional commands to run in the subprocess, as a list or tuple of strings or a single string. Defaults to None.
+    :type subcommands: Union[list, tuple, None, str]
+
+    :param exit_keys: If set, the process can be terminated by pressing the specified key combination (e.g. "ctrl+alt+x"). Defaults to None.
+    :type exit_keys: Union[str, None]
+
+    :param end_of_printline: The string to be printed at the end of each line of output. Defaults to "".
+    :type end_of_printline: str
+
+    :param print_output: Whether to print the output of the subprocess to the console. Defaults to True.
+    :type print_output: bool
+
+    :param timeout: The maximum amount of time to allow the subprocess to run before terminating it. Defaults to None.
+    :type timeout: Optional[float]
+
+    :param cwd: The working directory for the subprocess. Defaults to the current working directory.
+    :type cwd: str
+
+    :param decodestdout: The character encoding to use for decoding the output of the subprocess. Defaults to None.
+    :type decodestdout: Optional[str]
+
+    :param decodestdouterrors: The error handling mode to use for decoding the output of the subprocess. Defaults to "ignore".
+    :type decodestdouterrors: str
+
+    :param stderrfile: The file path to write standard error output to. Defaults to None.
+    :type stderrfile: Optional[str]
+
+    :param stdoutfile: The file path to write standard output to. Defaults to None.
+    :type stdoutfile: Optional[str]
+
+    :param create_no_window: Whether to create a new console window for the subprocess. Defaults to True.
+    :type create_no_window: bool
+
+    :param use_shlex: Whether to use the shlex module to split the command string into arguments. Defaults to False.
+    :type use_shlex: bool
+
+    :param pyinstaller_module_name: The name of the PyInstaller module to run in the subprocess. Defaults to None.
+    :type pyinstaller_module_name: Optional[str]
+
+    :param pyinstaller_entry: The name of the PyInstaller entry point to run in the subprocess. Defaults to None.
+    :type pyinstaller_entry: Optional[str]
+
+    :param argsforpyinstaller: Additional arguments to pass to the PyInstaller subprocess. Defaults to ().
+    :type argsforpyinstaller: Tuple
+
+    :param kwargs: Additional keyword arguments to pass to the subprocess.Popen() constructor.
+    :type kwargs: Any
+
+    :return: A list 
+
+execute_as_mainprocess
+    Starts a new process using the `start` command on Windows.
+
+    Args:
+        cmd (Union[str, List[str]]): The command to execute. Can be a string or a list of strings.
+        nameofexe (Optional[str]): The name of the executable file to look for after the process has started. Defaults to None.
+        returnpid (bool): Whether to return the PID of the new process or not. Defaults to True.
+        timeout_get_pid (int): The maximum amount of time (in seconds) to wait for the new process to start. Defaults to 5.
+        creationtimebreak (int): The maximum amount of time (in seconds) to wait for the new process to start after its creation time - if found, returns immediately. If not, the function returns the process after timeout_get_pid Defaults to 1.
+
+    Returns:
+        Union[subprocess.Popen, psutil.Process]: If `returnpid` is True, returns the `psutil.Process` object corresponding to the new process. Otherwise, returns the `subprocess.Popen` object that was used to start the new process.
+
+# Examples
+adb_path = "C:\\Users\\Gamer\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.exe"
+deviceserial = "localhost:62037"
+cmd2 = f"adb -s {deviceserial} shell su -c 'ls -la'"
+for q in range(2):
+    pap = execute_subprocess_multiple_commands_with_timeout_bin2(cmd=cmd2)
+    with open("c:\\asdfasdfasdfasdfasdfasdf.txt", mode="a", encoding="utf-8") as f:
+        f.write(b"".join(pap).decode("utf-8", "ignore"))
+
+for q in range(2):
+    pap = execute_subprocess_multiple_commands_with_timeout_bin2(
+        cmd=cmd2,
+        decodestdout="utf-8",
+        decodestdouterrors="ignore",
+        stdoutfile="f:\\lologo.txt",
+    )
+    print(pap)
+    with open("c:\\asdfasdfasdfasdfasdfasdf.txt", mode="a", encoding="utf-8") as f:
+        f.write("".join(pap))
+
+for q in range(2):
+    pap = execute_subprocess_multiple_commands_with_timeout_bin2(
+        cmd='dir /bvabds /dsxds ""', stderrfile="f:\\testtestloglog.txt"
+    )
+    with open("c:\\asdfasdfasdfasdfasdfasdf.txt", mode="a", encoding="utf-8") as f:
+        f.write(b"".join(pap).decode("utf-8", "ignore"))
+
+for q in range(2):
+    pap = execute_subprocess_multiple_commands_with_timeout_bin2(
+        cmd='dir /b ""',
+        stderrfile="f:\\testtestloglog.txt",
+        stdoutfile="f:\\lologo.txt",
+    )
+    with open("c:\\asdfasdfasdfasdfasdfasdf.txt", mode="a", encoding="utf-8") as f:
+        f.write(b"".join(pap).decode("utf-8", "ignore"))
+
+
+pap = execute_subprocess_multiple_commands_with_timeout_bin2(
+    cmd="notepad.exe", subcommands=None, timeout=2
+)
+
+for q in range(2):
+    pap = execute_subprocess_multiple_commands_with_timeout_bin2(
+        cmd=["ls"],
+        stderrfile="f:\\testtestloglog.txt",
+        stdoutfile="c:\\locccclogo.txt",
+    )
+
+mainp = execute_as_mainprocess(
+    cmd="notepad.exe",
+    nameofexe="notepad.exe",
+    returnpid=True,
+    timeout_get_pid=5,
+    creationtimebreak=1,
+)
+print(mainp)
+
+pap = execute_subprocess_multiple_commands_with_timeout_bin2(
+    cmd='notepad.exe "C:\locccclogo.txt"',
+    stdoutfile="c:\\locccclogo.txt2",
+    stderrfile="f:\\testtestloglog2.txt",
+    subcommands=None,
+    timeout=2,
+    use_shlex=True,
+)
+
+bab = execute_subprocess_multiple_commands_with_timeout_bin2(
+    cmd="notepad.exe",
+    subcommands=None,
+    exit_keys=None,
+    end_of_printline="",
+    print_output=True,
+    timeout=None,
+    cwd=os.getcwd(),
+    decodestdout=None,
+    decodestdouterrors="ignore",
+    stdoutfile="c:\\locccclogo3.txt",
+    stderrfile="f:\\testtestloglog3.txt",
+    create_no_window=False,
+    use_shlex=False,
+    pyinstaller_module_name="tes",
+    pyinstaller_entry="tete",
+    argsforpyinstaller=(),
+)
+
+
+bab2 = execute_subprocess_multiple_commands_with_timeout_bin2_thread(
+    cmd="dir",
+    subcommands=None,
+    exit_keys=None,
+    end_of_printline="",
+    print_output=True,
+    timeout=None,
+    cwd=os.getcwd(),
+    decodestdout=None,
+    decodestdouterrors="ignore",
+    stdoutfile="c:\\locccclogo3.txt",
+    stderrfile="f:\\testtestloglog3.txt",
+    CREATE_NO_WINDOW=False,
+    use_shlex=False,
+    pyinstaller_module_name="tes",
+    pyinstaller_entry="tete",
+    argsforpyinstaller=(),
+)
+
 ```
